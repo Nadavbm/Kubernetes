@@ -56,6 +56,7 @@ kubectl get pods
 kubectl get pods --all-namespaces
 kubectl get pods  -n kube-system --no-headers=true
 kubectl get pods  -n kube-system --field-selector=status.phase=Running
+kubectl get pods -l app=nginx
 
 kubectl describe pods <podName>
 kubectl get pod <podName> -o yaml
@@ -86,9 +87,12 @@ Object creation
 
 kubectl apply -f ./dir
 kubectl apply -f https://github/nadavbm/kubernetes/nginx/nginx.yaml
-kubectl apply -f ./manifest.yaml 
+kubectl apply -f /root/kubernetes/nginx/nginx.yaml
 
+kubectl get deployments
+kubectl describe deployment nginx-deploy
 kubectl create deployment nginx --image=nginx
+kubectl delete deployment nginx-deploy
 
 API config
 ==========
