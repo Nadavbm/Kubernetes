@@ -4,6 +4,7 @@
 #
 Cluster config
 ==============
+
 kubectl cluster-info
 kubectl cluster-info dump --output-directory=/root/k8s.state
 
@@ -20,13 +21,15 @@ netstat -tulpn |grep kube-apiserve | awk '{ print $4 }' | sed 's/.*://'
 
 Manage nodes
 ==============
+
 kubectl get nodes
 kubectl get node --selector='!node-role.kubernetes.io/master'
-kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="ExternalIP")].address}'
+kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}'
 JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'  && kubectl get nodes -o jsonpath="$JSONPATH" | grep "Ready=True"
 
 kubectl describe nodes
 kubectl describe node <nodeName>
+kubectl get events --sort-by=.metadata.creationTimestamp
 
 # Unscheduling \ Scheduling pods on nodeName
 kubectl cordon <nodeName>
@@ -46,15 +49,49 @@ kubectl delete node <nodeName>
 
 Manage Pods 
 ==============
+
+kubectl explain pods
+
 kubectl get pods
 kubectl get pods --all-namespaces
+kubectl get pods  -n kube-system --no-headers=true
+kubectl get pods  -n kube-system --field-selector=status.phase=Running
 
 kubectl describe pods <podName>
+kubectl get pod <podName> -o yaml
+
+kubectl logs <podName>
+kubectl logs -f <podName>
+kubectl logs -f <podName> -c <containerName>
+kubectl logs -f -l name=<labelName> --all-containers
+
+kubectl exec <podName> -- ls /
+kubectl exec <podName> -c <containerName> -- ls /
+kubectl port-forward <podName> 5000:6000 
+
+kubectl delete pod <podName>
 
 Manage Services
 ===============
+
+kubectl explain svc
+
 kubectl get services
 kubectl get services --sort-by=.metadata.name
 
+kubectl delete service <serviceName>
 
+Object creation
+===============
 
+kubectl apply -f ./dir
+kubectl apply -f https://github/nadavbm/kubernetes/nginx/nginx.yaml
+kubectl apply -f ./manifest.yaml 
+
+kubectl create deployment nginx --image=nginx
+
+API config
+==========
+kubectl api-resources
+kubectl api-resources --namespaced=true 
+kubectl api-resources -o name 
