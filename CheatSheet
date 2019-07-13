@@ -1,0 +1,45 @@
+#
+#
+# To build Kubernetes cluster on CentOS7 use Nadavbm/AnsiblePlaybook/kubernetes
+#
+Cluster config
+==============
+kubectl cluster-info
+kubectl cluster-info dump --output-directory=/root/k8s.state
+
+# Initial a cluster
+kubeadm init --apiserver-advertise-address={{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} --pod-network-cidr=10.240.0.0/16
+# Get API tokens
+kubeadm token list | tail -1 | cut -f 1 -d " "
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+netstat -tulpn |grep kube-apiserve | awk '{ print $4 }' | sed 's/.*://'
+
+Managing nodes
+==============
+kubectl get nodes
+kubectl get node --selector='!node-role.kubernetes.io/master'
+kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="ExternalIP")].address}'
+
+JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'  && kubectl get nodes -o jsonpath="$JSONPATH" | grep "Ready=True"
+
+kubectl describe nodes
+kubectl describe node <nodeName>
+
+# Update bode
+kubectl patch node <nodeName> -p '{"spec":{"unschedulable":true}}'
+
+# Join node to a cluster
+kubeadm join --token={{ hostvars['join_params']['token'] }}
+    --discovery-token-ca-cert-hash sha256:{{ hostvars['join_params']['hash'] }}
+    {{  hostvars['join_params']['master']  }}:{{  hostvars['join_params']['port']  }}
+
+To Manage Pods 
+==============
+kubectl get pods
+kubectl get pods --all-namespaces
+
+
+
+
+
+
