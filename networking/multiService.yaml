@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metdata:
+  name: webService
+spec:
+  selector:
+    app: webApp
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 4443
+
+

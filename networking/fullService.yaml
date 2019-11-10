@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sub-domain1
+spec:
+  selector:
+    name: appBox
+  clusterIP: None
+  ports:
+  - name: somePortName
+    port: 4000
+    targerPort: 4001
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web1
+  labels:
+    name: appBox
+spec:
+  hostname: web-1
+  subdomain: sub-domain1
+  containers:
+  - image: web:1.54
+    name: web1
+
+
+

@@ -1,0 +1,28 @@
+Commands:
+=========
+
+kubectl get svc <serviceName>
+kubectl get svc <serviceName> -o json
+kubectl describe svc <serviceName>
+kubectl edit svc <serviceName>
+kubectl describe service <serviceName>
+
+kubectl get ingress
+kubectl get ingress <ingressName> -o yaml
+kubectl describe ingress <ingressName>
+kubectl edit ingress <ingressName>
+
+kubectl get ep
+
+kubectl get services kube-dns --namespace=kube-system
+
+Concepts and definitions:
+=========================
+Cluster network - Set of links that fcilitate communication within a cluster according to k8s networking model.
+
+Service - abstract way to expose running application on pods. Identifying sets of pods by label selector. Assume to have virtual IP.
+
+Igress - Ingress expose http\s routes from outside the cluster to services within the cluster.
+
+Endpoint Slice - Contains set of network endpoints. Provide simple way to track network endpoint within a cluster.
+
