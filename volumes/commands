@@ -1,0 +1,12 @@
+Volumes
+=======
+
+kubectl get pv										# Show all persistent volume
+kubectl get pvc										# Show claims
+
+kubectl get storageclass							
+kubectl get storageclass <className> -o json		# JSON of the class 
+kubectl delete storageclass <className>
+
+
+

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pdGoogle
+spec:
+  contianers:
+  - image: k8s.gcr.io/webserver
+    name: web-contianer
+    volumeMounts:
+    - mountPath: /app/web
+      name: web-volume
+  volumes:
+  - name: web-volume
+    # You must create this disk in GCP before
+    gcePersistentDisk:
+      pdName: pdGoogle-1
+      fsType: ext4
+
+

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webi-pod
+spec:
+  containers:
+    - name: frontend
+      image: nginx
+      volumeMonts:
+      - mountPath: "/var/www/html"
+        name: webi
+  volumes:
+    - name: webpv
+      persistentVolumeClaim:
+        claimName: john-mclaim   
+
+
